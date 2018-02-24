@@ -1,5 +1,9 @@
 // Base class for enemy and player
 var Movable = function(x, y, sprite) {
+    // starting location
+    this.START_X = x;
+    this.START_Y = y;
+
     // Location
     this.x = x;
     this.y = y;
@@ -54,7 +58,7 @@ Enemy.prototype.update = function(dt) {
     if (this.canMove(this.speed * dt, undefined)) {
         this.x += this.speed * dt;
     } else {
-        this.x = -100;
+        this.x = this.START_X;
     }
 };
 
@@ -68,10 +72,11 @@ Enemy.prototype.render = function() {
 // a handleInput() method.
 
 // The player
-var Player = function() {
+var Player = function(enemyList) {
     Movable.call(this, 200, 380, 'images/char-boy.png');
     this.xSpeed = 100; 
     this.ySpeed = 80; 
+    this.enemyList = enemyList;
 };
 
 Player.prototype = Object.create(Movable.prototype);
@@ -80,6 +85,37 @@ Player.prototype.constructor = Player;
 // Update player's position, required method for game
 // Parameter: dt, a time delta between ticks
 Player.prototype.update = function(x, y) {
+    if (this.isCollision()) {
+        this.reset();
+    }
+
+    if (this.hasWon()) {
+        this.reset();
+    }
+};
+
+// Check whether there's a collision
+Player.prototype.isCollision = function() {
+    for (const enemy of this.enemyList) {
+        if (Math.abs(enemy.x - this.x) < 50 &&
+            Math.abs(enemy.y - this.y) < 50 ) {
+                return true;
+            }
+    }
+    return false;
+};
+
+// Check whether user has won
+Player.prototype.hasWon = function() {
+    if (this.y < 0) {
+        return true;
+    }
+    return false;
+};
+
+Player.prototype.reset = function() {
+    this.x = this.START_X;
+    this.y = this.START_Y;
 };
 
 // Draw the player on the screen, required method for game
@@ -130,7 +166,7 @@ var allEnemies = [
     enemy3
 ];
 
-var player = new Player();
+var player = new Player(allEnemies);
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.

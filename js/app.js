@@ -88,7 +88,6 @@ Player.prototype.update = function(x, y) {
     if (this.isCollision()) {
         this.reset();
     }
-
     if (this.hasWon()) {
         this.reset();
     }
@@ -156,9 +155,9 @@ Player.prototype.handleInput = function(key) {
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-var enemy1 = new Enemy(-100, 60, 30);
-var enemy2 = new Enemy(-100, 140, 40);
-var enemy3 = new Enemy(-100, 220, 50);
+var enemy1 = new Enemy(-100, 60, 100);
+var enemy2 = new Enemy(-100, 140, 200);
+var enemy3 = new Enemy(-100, 220, 300);
 
 var allEnemies = [
     enemy1,
